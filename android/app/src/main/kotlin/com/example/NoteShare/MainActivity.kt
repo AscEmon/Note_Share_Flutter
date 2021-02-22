@@ -1,0 +1,6 @@
+package com.example.NoteShare
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
