@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../Utilities/AppRoutes.dart';
 
 class SignInPage extends StatefulWidget {
@@ -19,20 +18,20 @@ class _SignInPageState extends State<SignInPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xfff90000),
-         bottomNavigationBar: Container(
+        bottomNavigationBar: Container(
           width: Get.width,
           color: Colors.black,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child:  Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Do not have an account?",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                   fontSize: 16,
-                      color: Colors.white,
+                    fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(
@@ -76,11 +75,10 @@ class _SignInPageState extends State<SignInPage> {
                 Text(
                   "Notes At Your Phone",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic
-                  ),
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic),
                 ),
                 SizedBox(
                   height: 48,
@@ -95,13 +93,13 @@ class _SignInPageState extends State<SignInPage> {
                       Icons.email_outlined,
                       color: Colors.white,
                     ),
-                //     enabledBorder: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(10.0),
-                //   borderSide: BorderSide(
-                //     color: Colors.white,
-                //     width: 2.0,
-                //   ),
-                // ),
+                    //     enabledBorder: OutlineInputBorder(
+                    //   borderRadius: BorderRadius.circular(10.0),
+                    //   borderSide: BorderSide(
+                    //     color: Colors.white,
+                    //     width: 2.0,
+                    //   ),
+                    // ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.0),
@@ -144,8 +142,25 @@ class _SignInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 25,
                 ),
-
-               
+                RaisedButton(
+                  padding: EdgeInsets.all(10),
+                  onPressed: () {
+                    print("tapped signIn");
+                    setState(() {
+                       Get.offAndToNamed(AppRoutes.DASHBOARD);
+                    });
+                   
+                  },
+                  child: Text("   Sign In   ",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(16.0),
+                    ),
+                  ),
+                  color: Colors.green,
+                )
               ],
             ),
           ),
