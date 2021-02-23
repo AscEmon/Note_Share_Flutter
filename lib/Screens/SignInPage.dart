@@ -143,6 +143,19 @@ class _SignInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 25,
                 ),
+                   RaisedButton(
+                      padding: EdgeInsets.all(10), 
+                      onPressed: () {
+                        Get.offAndToNamed(AppRoutes.DASHBOARD);
+                      },
+                      child: Text("   Sign In    ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(16.0),
+                        ),
+                      ),
+                      color: Colors.green,
+                    )
 
                
               ],
