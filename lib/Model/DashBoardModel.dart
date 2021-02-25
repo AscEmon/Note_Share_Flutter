@@ -5,7 +5,7 @@ class DashBoardModel{
   static List<Subject> sub=[
      Subject(
       subjectName: "CSE",
-      iconData: Icons.backpack_outlined 
+      iconData: Icons.engineering 
       ),
       Subject(
       subjectName: "EEE",
@@ -20,20 +20,20 @@ class DashBoardModel{
       iconData: Icons.badge 
      ),
       Subject(
-      subjectName: "CSE",
+      subjectName: "ENGLISH",
       iconData: Icons.backpack_outlined 
       ),
       Subject(
-      subjectName: "EEE",
-      iconData: Icons.backpack_outlined 
+      subjectName: "MATH",
+      iconData: Icons.mark_chat_read 
      ),
       Subject(
-      subjectName: "IPE",
-      iconData: Icons.backpack_outlined 
+      subjectName: "PHYSICS",
+      iconData: Icons.work_sharp 
      ),
       Subject(
-      subjectName: "BBA",
-      iconData: Icons.backpack_outlined 
+      subjectName: "CHEMISTRY",
+      iconData: Icons.fact_check 
      ),
   ];
 }

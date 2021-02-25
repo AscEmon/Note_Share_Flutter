@@ -45,12 +45,14 @@ class _DashBoardState extends State<DashBoard> {
                   children: [
                     Icon(
                       DashBoardModel.sub[index].iconData,
-                      size: 20,
+                      size: 40,
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    Text(DashBoardModel.sub[index].subjectName)
+                    Text(DashBoardModel.sub[index].subjectName,
+                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
               ),

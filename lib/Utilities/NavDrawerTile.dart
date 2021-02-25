@@ -11,11 +11,13 @@ class NavDrawerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onNavPress,
-      leading: Icon(navIcon),
+      leading: Icon(navIcon,color: Colors.black,),
       title: Text(
         navTitle,
         style: TextStyle(
           fontSize: 16,
+          color: Colors.black,
+          fontWeight: FontWeight.bold
         ),
       ),
     );
