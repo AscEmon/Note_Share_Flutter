@@ -1,6 +1,10 @@
+import 'package:NoteShare/Screens/SplashScreen.dart';
+import 'package:NoteShare/Utilities/AppRoutes.dart';
 import 'package:NoteShare/Utilities/NavDrawerTile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class NavDrawer extends StatelessWidget {
@@ -53,7 +57,8 @@ class NavDrawer extends StatelessWidget {
             navIcon: Icons.logout,
             navTitle: 'Sign Out',
             onNavPress: () {
-             // Get.toNamed(AppRoutes.PACKAGES);
+               signOut();
+             Get.toNamed(AppRoutes.SIGNINPAGE);
             },
           ),
           NavDrawerTile(
@@ -82,4 +87,16 @@ class NavDrawer extends StatelessWidget {
       ),
     );
   }
+}
+Future signOut()async{
+  FirebaseAuth auth=FirebaseAuth.instance;
+   try{
+     pref.clear();
+     return await auth.signOut();
+   }
+   catch(e){
+    print(e.toString());
+   }
+   
+  
 }

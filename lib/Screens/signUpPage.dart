@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:NoteShare/Utilities/AppRoutes.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -13,7 +16,72 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _signUpEmail = TextEditingController();
   TextEditingController _signUpPassword = TextEditingController();
   TextEditingController _signUpConfirmPassword = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+
+//UserSign Up function where Firebase auth are working
+  void signUp() async {
+     Get.offAndToNamed(AppRoutes.DASHBOARD);
+    if (_formKey.currentState.validate()) {
+          
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: _signUpEmail.text, password: _signUpPassword.text);
+   
+        if (userCredential.user.uid!=null) {
+            _userSetUp(_signUpName.text.toString(),_signUpEmail.text.toString());
+          _signUpName.clear();
+          _signUpEmail.clear();
+          _signUpPassword.clear();
+          _signUpConfirmPassword.clear();
+        
+       
+        }
+      } on FirebaseAuthException catch (e) {
+         _signUpName.clear();
+          _signUpEmail.clear();
+          _signUpPassword.clear();
+          _signUpConfirmPassword.clear();
+        if (e.code == 'user-not-found') {
+          Get.snackbar("Error", "No user found for that email.",
+              backgroundColor: Colors.greenAccent,
+              snackPosition: SnackPosition.BOTTOM);
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          Get.snackbar("Error", "Wrong password provided for that user.",
+              backgroundColor: Colors.greenAccent,
+              snackPosition: SnackPosition.BOTTOM);
+          print('Wrong password provided for that user.');
+        }
+        else{
+           Get.snackbar("Error", "This email address is already been taken",
+              backgroundColor: Colors.greenAccent,
+              snackPosition: SnackPosition.BOTTOM);
+          print(e.message);
+        }
+      }
+    }
+  }
+
+
+//userData are store in firestore   
+Future<void>_userSetUp(String name,String email)async{
+  CollectionReference user=FirebaseFirestore.instance.collection("Users");
+  FirebaseAuth auth=FirebaseAuth.instance;
+  String uid=auth.currentUser.uid;
+   print(name);
+
+  user.add({
+    'name' : name,
+    'email': email,
+    "uid": uid
+  });
+  
+  return;
+}
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,14 +91,17 @@ class _SignUpPageState extends State<SignUpPage> {
             child: SingleChildScrollView(
           child: Column(
             children: [
-               SizedBox(
-                            height: 30,
-                          ),
+              SizedBox(
+                height: 30,
+              ),
               Form(
-                key: formKey,
+                key: _formKey,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 10, top: 30, right: 10, ),
+                    left: 10,
+                    top: 30,
+                    right: 10,
+                  ),
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: const BorderRadius.all(
@@ -39,7 +110,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     color: Colors.transparent,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10,bottom: 20),
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -58,19 +130,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             maxLines: 1,
                             controller: _signUpName,
                             decoration: new InputDecoration(
+                              errorStyle: TextStyle(color: Colors.white),
                               labelText: 'Name',
                               labelStyle: TextStyle(color: Colors.white),
                               suffixIcon: Icon(
                                 Icons.account_box,
                                 color: Colors.white,
                               ),
-                              //     enabledBorder: OutlineInputBorder(
-                              //   borderRadius: BorderRadius.circular(10.0),
-                              //   borderSide: BorderSide(
-                              //     color: Colors.white,
-                              //     width: 2.0,
-                              //   ),
-                              // ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10.0),
@@ -89,6 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             maxLines: 1,
                             controller: _signUpEmail,
                             decoration: new InputDecoration(
+                              errorStyle: TextStyle(color: Colors.white),
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.white),
                               suffixIcon: Icon(
@@ -117,6 +184,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             maxLines: 1,
                             controller: _signUpPassword,
                             decoration: new InputDecoration(
+                              errorStyle: TextStyle(color: Colors.white),
                               labelText: 'Password',
                               labelStyle: TextStyle(color: Colors.white),
                               suffixIcon: Icon(
@@ -143,6 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               maxLines: 1,
                               controller: _signUpConfirmPassword,
                               decoration: new InputDecoration(
+                                errorStyle: TextStyle(color: Colors.white),
                                 labelText: 'Confirm Password',
                                 labelStyle: TextStyle(color: Colors.white),
                                 suffixIcon: Icon(
@@ -169,7 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           RaisedButton(
                             padding: EdgeInsets.all(10),
-                            onPressed: () {},
+                            onPressed: signUp,
                             child: Text("   Sign Up    ",
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
@@ -193,3 +262,5 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
+
+

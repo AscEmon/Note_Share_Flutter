@@ -1,7 +1,10 @@
+import 'package:NoteShare/Screens/SplashScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Utilities/AppRoutes.dart';
-
+ // bool loginStatus=false;
 class SignInPage extends StatefulWidget {
   SignInPage({Key key}) : super(key: key);
 
@@ -12,7 +15,44 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   TextEditingController _loginEmail = TextEditingController();
   TextEditingController _loginPassword = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+
+
+  void signIn() async {
+     Get.offAndToNamed(AppRoutes.DASHBOARD);
+    if (_formKey.currentState.validate()) {
+      // _formKey.currentState.save();
+         
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: _loginEmail.text, password: _loginPassword.text);
+        if (userCredential.user.uid!=null) {
+         // loginStatus=true;
+         // pref.setBool("loginStatus",loginStatus??false);
+          _loginEmail.clear();
+          _loginPassword.clear();
+          
+        }
+      } on FirebaseAuthException catch (e) {
+        _loginEmail.clear();
+        _loginPassword.clear();
+        if (e.code == 'user-not-found') {
+          Get.snackbar("Error", "No user found for that email.",
+              backgroundColor: Colors.greenAccent,
+              snackPosition: SnackPosition.BOTTOM);
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          Get.snackbar("Error", "Wrong password provided for that user.",
+              backgroundColor: Colors.greenAccent,
+              snackPosition: SnackPosition.BOTTOM);
+          print('Wrong password provided for that user.');
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,13 +101,13 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             children: [
               Form(
-                key: formKey,
+                key: _formKey,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       SizedBox(
+                      SizedBox(
                         height: 100,
                       ),
                       Image.asset(
@@ -93,19 +133,13 @@ class _SignInPageState extends State<SignInPage> {
                         maxLines: 1,
                         controller: _loginEmail,
                         decoration: new InputDecoration(
+                          errorStyle: TextStyle(color: Colors.white),
                           labelText: 'Email',
                           labelStyle: TextStyle(color: Colors.white),
                           suffixIcon: Icon(
                             Icons.email_outlined,
                             color: Colors.white,
                           ),
-                          //     enabledBorder: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(10.0),
-                          //   borderSide: BorderSide(
-                          //     color: Colors.white,
-                          //     width: 2.0,
-                          //   ),
-                          // ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(10.0),
@@ -126,6 +160,7 @@ class _SignInPageState extends State<SignInPage> {
                         maxLines: 1,
                         controller: _loginPassword,
                         decoration: new InputDecoration(
+                          errorStyle: TextStyle(color: Colors.white),
                           labelText: 'Password',
                           labelStyle: TextStyle(color: Colors.white),
                           suffixIcon: Icon(
@@ -150,9 +185,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       RaisedButton(
                         padding: EdgeInsets.all(10),
-                        onPressed: () {
-                          Get.offAndToNamed(AppRoutes.DASHBOARD);
-                        },
+                        onPressed: signIn,
                         child: Text("   Sign In    ",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
