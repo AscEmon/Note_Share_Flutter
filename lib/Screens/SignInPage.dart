@@ -20,7 +20,7 @@ class _SignInPageState extends State<SignInPage> {
 
 
   void signIn() async {
-     Get.offAndToNamed(AppRoutes.DASHBOARD);
+    
     if (_formKey.currentState.validate()) {
       // _formKey.currentState.save();
          
@@ -31,6 +31,7 @@ class _SignInPageState extends State<SignInPage> {
         if (userCredential.user.uid!=null) {
          // loginStatus=true;
          // pref.setBool("loginStatus",loginStatus??false);
+          Get.offAndToNamed(AppRoutes.DASHBOARD);
           _loginEmail.clear();
           _loginPassword.clear();
           

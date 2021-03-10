@@ -19,13 +19,13 @@ class _SubjectScreenState extends State<SubjectScreen> {
   Widget build(BuildContext context) {
   return SafeArea(
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:id==0? FloatingActionButton(
             child: Icon(Icons.add),
             onPressed:(){
-              Get.toNamed(AppRoutes.UPLOADPAGE);
+              Get.toNamed(AppRoutes.UPLOADPAGE,arguments: id);
             } ,
 
-          ),
+          ):Text(''),
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text("Subject",
@@ -42,7 +42,10 @@ class _SubjectScreenState extends State<SubjectScreen> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-               Get.toNamed(AppRoutes.UPLOADERPAGE);
+                setState(() {
+                     Get.toNamed(AppRoutes.UPLOADERPAGE,arguments: SubjectModel.sub[index].subjectName);
+                });
+            
               },
               child: Card(
                 elevation: 0,

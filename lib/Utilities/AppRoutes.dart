@@ -1,3 +1,4 @@
+import 'package:NoteShare/Screens/ImageLoadPage.dart';
 import 'package:NoteShare/Screens/UploadPage.dart';
 import 'package:NoteShare/Screens/UploadersPage.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class AppRoutes {
   static String SUBJECTPAGE = "Subjectscreen";
    static String UPLOADPAGE = "UploadPage";
   static String UPLOADERPAGE = "UploadersPage";
+   static String IMAGELOADEDPAGE = "ImageLoadedPage";
 
   static List<GetPage> AppRoutesList() {
     return [
@@ -26,6 +28,7 @@ class AppRoutes {
       GetPage(name: SUBJECTPAGE, page: () => SubjectScreen()),
       GetPage(name: UPLOADPAGE, page: () => UploadPage()),
        GetPage(name: UPLOADERPAGE, page: () => UploadersPage()),
+         GetPage(name: IMAGELOADEDPAGE, page: () => ImageLoadedPage()),
     
     ];
   }

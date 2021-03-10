@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "742492262396",
+    "project_id": "noteshareflutter",
+    "storage_bucket": "noteshareflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742492262396:android:367f39c8358aaca00aac79",
+        "android_client_info": {
+          "package_name": "com.example.NoteShare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742492262396-dg93b1ojohtcg2mcet0gdj40vdjciuis.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKxTYodnDOMERD5uzt-BZLhSr8SSF3d50"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742492262396-dg93b1ojohtcg2mcet0gdj40vdjciuis.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

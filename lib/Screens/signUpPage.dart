@@ -12,7 +12,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController _signUpName = TextEditingController();
+ static TextEditingController _signUpName = TextEditingController();
   TextEditingController _signUpEmail = TextEditingController();
   TextEditingController _signUpPassword = TextEditingController();
   TextEditingController _signUpConfirmPassword = TextEditingController();
@@ -21,7 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
 //UserSign Up function where Firebase auth are working
   void signUp() async {
-     Get.offAndToNamed(AppRoutes.DASHBOARD);
+    
     if (_formKey.currentState.validate()) {
           
       try {
@@ -30,6 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 email: _signUpEmail.text, password: _signUpPassword.text);
    
         if (userCredential.user.uid!=null) {
+           Get.offAndToNamed(AppRoutes.DASHBOARD);
             _userSetUp(_signUpName.text.toString(),_signUpEmail.text.toString());
           _signUpName.clear();
           _signUpEmail.clear();
