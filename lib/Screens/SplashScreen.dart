@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Utilities/AppRoutes.dart';
+import '../main.dart';
 
 
-SharedPreferences pref;
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key}) : super(key: key);
@@ -23,7 +23,8 @@ class _SplashPageState extends State<SplashPage>with SingleTickerProviderStateMi
 
   void navigationPage() async {
     try {
-    Get.offAndToNamed(AppRoutes.SIGNINPAGE);
+      bool loginstatus=prefs.getBool("loginStatus");
+      loginstatus==true?Get.offAndToNamed(AppRoutes.DASHBOARD):loginstatus==null?Get.offAndToNamed(AppRoutes.SIGNINPAGE):Get.offAndToNamed(AppRoutes.SIGNINPAGE);
     } catch (e) {
       print(e.toString());
     }

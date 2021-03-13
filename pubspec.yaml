@@ -23,6 +23,8 @@ dependencies:
   flutter_absolute_path: ^1.0.6
   fluttertoast: ^7.1.8
   cached_network_image: ^2.5.1
+  data_connection_checker: ^0.3.4
+  connectivity: ^2.0.2
 
 dev_dependencies:
   flutter_test:

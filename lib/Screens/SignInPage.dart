@@ -1,10 +1,12 @@
 import 'package:NoteShare/Screens/SplashScreen.dart';
+import 'package:NoteShare/Utilities/check_connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../Utilities/AppRoutes.dart';
- // bool loginStatus=false;
+import '../main.dart';
+
+// bool loginStatus=false;
 class SignInPage extends StatefulWidget {
   SignInPage({Key key}) : super(key: key);
 
@@ -17,40 +19,39 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController _loginPassword = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
-
-  void signIn() async {
-    
+  void signIn() {
     if (_formKey.currentState.validate()) {
-      // _formKey.currentState.save();
-         
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: _loginEmail.text, password: _loginPassword.text);
-        if (userCredential.user.uid!=null) {
-         // loginStatus=true;
-         // pref.setBool("loginStatus",loginStatus??false);
-          Get.offAndToNamed(AppRoutes.DASHBOARD);
-          _loginEmail.clear();
-          _loginPassword.clear();
-          
+      isInternet().then((internet) async {
+        if (internet == true) {
+          try {
+            UserCredential userCredential = await FirebaseAuth.instance
+                .signInWithEmailAndPassword(
+                    email: _loginEmail.text, password: _loginPassword.text);
+            if (userCredential.user.uid != null) {
+               prefs.setBool("loginStatus",true);
+              Get.offAndToNamed(AppRoutes.DASHBOARD);
+              _loginEmail.clear();
+              _loginPassword.clear();
+            }
+          } on FirebaseAuthException catch (e) {
+            _loginEmail.clear();
+            _loginPassword.clear();
+            if (e.code == 'user-not-found') {
+              Get.snackbar("Error", "No user found for that email.",
+                  backgroundColor: Colors.greenAccent,
+                  snackPosition: SnackPosition.BOTTOM);
+              print('No user found for that email.');
+            } else if (e.code == 'wrong-password') {
+              Get.snackbar("Error", "Wrong password provided for that user.",
+                  backgroundColor: Colors.greenAccent,
+                  snackPosition: SnackPosition.BOTTOM);
+              print('Wrong password provided for that user.');
+            }
+          }
+        } else if(internet == false) {
+          Get.snackbar("Internet", "No internet",backgroundColor: Colors.white,colorText: Colors.black);
         }
-      } on FirebaseAuthException catch (e) {
-        _loginEmail.clear();
-        _loginPassword.clear();
-        if (e.code == 'user-not-found') {
-          Get.snackbar("Error", "No user found for that email.",
-              backgroundColor: Colors.greenAccent,
-              snackPosition: SnackPosition.BOTTOM);
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          Get.snackbar("Error", "Wrong password provided for that user.",
-              backgroundColor: Colors.greenAccent,
-              snackPosition: SnackPosition.BOTTOM);
-          print('Wrong password provided for that user.');
-        }
-      }
+      });
     }
   }
 

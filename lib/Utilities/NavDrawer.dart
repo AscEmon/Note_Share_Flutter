@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 
 class NavDrawer extends StatelessWidget {
 
@@ -24,20 +26,20 @@ class NavDrawer extends StatelessWidget {
             )
           ),
        
-          NavDrawerTile(
-            navIcon: Icons.camera,
-            navTitle: 'Camera',
-            onNavPress: () {
-            //  Get.toNamed(AppRoutes.FAVOURITE);
-            },
-          ),
-          NavDrawerTile(
-            navIcon: Icons.image,
-            navTitle: 'Gallary',
-            onNavPress: () {
-             // Get.toNamed(AppRoutes.NAVPROPOSALS);
-            },
-          ),
+          // NavDrawerTile(
+          //   navIcon: Icons.camera,
+          //   navTitle: 'Camera',
+          //   onNavPress: () {
+          //   //  Get.toNamed(AppRoutes.FAVOURITE);
+          //   },
+          // ),
+          // NavDrawerTile(
+          //   navIcon: Icons.image,
+          //   navTitle: 'Gallary',
+          //   onNavPress: () {
+          //    // Get.toNamed(AppRoutes.NAVPROPOSALS);
+          //   },
+          // ),
        
           NavDrawerTile(
             navIcon: Icons.contact_page,
@@ -58,7 +60,7 @@ class NavDrawer extends StatelessWidget {
             navTitle: 'Sign Out',
             onNavPress: () {
                signOut();
-             Get.toNamed(AppRoutes.SIGNINPAGE);
+             Get.offAndToNamed(AppRoutes.SIGNINPAGE);
             },
           ),
           NavDrawerTile(
@@ -91,7 +93,7 @@ class NavDrawer extends StatelessWidget {
 Future signOut()async{
   FirebaseAuth auth=FirebaseAuth.instance;
    try{
-     pref.clear();
+     prefs.clear();
      return await auth.signOut();
    }
    catch(e){
