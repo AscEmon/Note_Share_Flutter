@@ -1,8 +1,11 @@
+import 'package:NoteShare/Utilities/check_connectivity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:NoteShare/Utilities/AppRoutes.dart';
+
+import '../main.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -12,76 +15,72 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
- static TextEditingController _signUpName = TextEditingController();
+  static TextEditingController _signUpName = TextEditingController();
   TextEditingController _signUpEmail = TextEditingController();
   TextEditingController _signUpPassword = TextEditingController();
   TextEditingController _signUpConfirmPassword = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
 //UserSign Up function where Firebase auth are working
   void signUp() async {
-    
     if (_formKey.currentState.validate()) {
-          
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: _signUpEmail.text, password: _signUpPassword.text);
-   
-        if (userCredential.user.uid!=null) {
-           Get.offAndToNamed(AppRoutes.DASHBOARD);
-            _userSetUp(_signUpName.text.toString(),_signUpEmail.text.toString());
-          _signUpName.clear();
-          _signUpEmail.clear();
-          _signUpPassword.clear();
-          _signUpConfirmPassword.clear();
-        
-       
+      isInternet().then((internet) async {
+        if (internet == true) {
+          try {
+            UserCredential userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                    email: _signUpEmail.text, password: _signUpPassword.text);
+
+            if (userCredential.user.uid != null) {
+               prefs.setBool("loginStatus",true);
+              Get.offAndToNamed(AppRoutes.DASHBOARD);
+              _userSetUp(
+                  _signUpName.text.toString(), _signUpEmail.text.toString());
+              _signUpName.clear();
+              _signUpEmail.clear();
+              _signUpPassword.clear();
+              _signUpConfirmPassword.clear();
+            }
+          } on FirebaseAuthException catch (e) {
+            _signUpName.clear();
+            _signUpEmail.clear();
+            _signUpPassword.clear();
+            _signUpConfirmPassword.clear();
+            if (e.code == 'user-not-found') {
+              Get.snackbar("Error", "No user found for that email.",
+                  backgroundColor: Colors.greenAccent,
+                  snackPosition: SnackPosition.BOTTOM);
+              print('No user found for that email.');
+            } else if (e.code == 'wrong-password') {
+              Get.snackbar("Error", "Wrong password provided for that user.",
+                  backgroundColor: Colors.greenAccent,
+                  snackPosition: SnackPosition.BOTTOM);
+              print('Wrong password provided for that user.');
+            } else {
+              Get.snackbar("Error", "This email address is already been taken",
+                  backgroundColor: Colors.greenAccent,
+                  snackPosition: SnackPosition.BOTTOM);
+              print(e.message);
+            }
+          }
+        } else if (internet == false) {
+          Get.snackbar("Internet", "No Internet");
         }
-      } on FirebaseAuthException catch (e) {
-         _signUpName.clear();
-          _signUpEmail.clear();
-          _signUpPassword.clear();
-          _signUpConfirmPassword.clear();
-        if (e.code == 'user-not-found') {
-          Get.snackbar("Error", "No user found for that email.",
-              backgroundColor: Colors.greenAccent,
-              snackPosition: SnackPosition.BOTTOM);
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          Get.snackbar("Error", "Wrong password provided for that user.",
-              backgroundColor: Colors.greenAccent,
-              snackPosition: SnackPosition.BOTTOM);
-          print('Wrong password provided for that user.');
-        }
-        else{
-           Get.snackbar("Error", "This email address is already been taken",
-              backgroundColor: Colors.greenAccent,
-              snackPosition: SnackPosition.BOTTOM);
-          print(e.message);
-        }
-      }
+      });
     }
   }
 
+//userData are store in firestore
+  Future<void> _userSetUp(String name, String email) async {
+    CollectionReference user = FirebaseFirestore.instance.collection("Users");
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser.uid;
+    print(name);
 
-//userData are store in firestore   
-Future<void>_userSetUp(String name,String email)async{
-  CollectionReference user=FirebaseFirestore.instance.collection("Users");
-  FirebaseAuth auth=FirebaseAuth.instance;
-  String uid=auth.currentUser.uid;
-   print(name);
+    user.add({'name': name, 'email': email, "uid": uid});
 
-  user.add({
-    'name' : name,
-    'email': email,
-    "uid": uid
-  });
-  
-  return;
-}
-
+    return;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -263,5 +262,3 @@ Future<void>_userSetUp(String name,String email)async{
     );
   }
 }
-
-
