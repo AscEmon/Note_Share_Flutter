@@ -28,7 +28,6 @@ class _UploadPageState extends State<UploadPage> {
   Asset asset;
   bool isLoading = false;
   bool internetCheck = false;
-  
 
   Future<void> pickImages() async {
     List<Asset> resultList = List<Asset>();
@@ -77,52 +76,6 @@ class _UploadPageState extends State<UploadPage> {
           uploaderName = res.data()["name"];
         });
         departMentName = id == 0 ? "CSE" : "OtherSubject";
-        var result2 = await FirebaseFirestore.instance
-            .collection("Uploaders")
-            .where("name", isEqualTo: uploaderName)
-            .get();
-        result2.docs.forEach((res) {
-          print("uploader name");
-          print(res.data()["name"]);
-          existName = res.data()["name"];
-        });
-        if (existName == uploaderName) {
-          try {
-            for (int i = 0; i < images.length; i++) {
-              final Reference storageRef = FirebaseStorage.instance
-                  .ref()
-                  .child(departMentName + "/" + dropdownValue);
-
-              final UploadTask task = storageRef
-                  .child('$uploaderName/$i/')
-                  .putFile(fileImageArray[i]);
-              await task.then((picValue) async {
-                Fluttertoast.showToast(
-                    msg: "UpLoading...",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                // await picValue.ref.getDownloadURL().then((downloadUrl) {
-                //   print("URL : " + downloadUrl);
-                //      url=downloadUrl;
-                //   imagesUrls.add(downloadUrl);
-                // });
-              });
-            }
-            setState(() {
-              print("calling");
-              images = null;
-              dropdownValue = 'Select Your Subject';
-              isLoading = false;
-              //fileImageArray.removeAt(i);
-            });
-          } catch (e) {
-            print(e);
-          }
-        } else {
           CollectionReference user =
               FirebaseFirestore.instance.collection("Uploaders");
           user.add({
@@ -165,7 +118,7 @@ class _UploadPageState extends State<UploadPage> {
           } catch (e) {
             print(e);
           }
-        }
+        
         setState(() {
           isLoading = true;
         });
